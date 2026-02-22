@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Soul Sword | Story Creator</title>
+    <style>
+      body { 
+    font-family: 'Inter', -apple-system, sans-serif; 
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); 
+    min-height: 100vh;
+    padding: 40px 20px;
+    display: flex; flex-direction: column; align-items: center; 
+}
+.container { 
+    background: rgba(255, 255, 255, 0.9); 
+    backdrop-filter: blur(10px);
+    padding: 30px; border-radius: 20px; 
+    width: 100%; max-width: 500px; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+}
+h1 { color: #2d3436; font-size: 2rem; margin-bottom: 20px; }
+.story-card { 
+    background: white; 
+    padding: 25px; border-radius: 15px; 
+    margin-top: 25px; width: 100%; max-width: 500px; 
+    position: relative; 
+    transition: transform 0.2s;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+.story-card:hover { transform: translateY(-5px); }
+.delete-btn { 
+    background: #ff7675; color: white; border: none; 
+    padding: 6px 12px; border-radius: 8px; cursor: pointer;
+    font-weight: 600; font-size: 12px;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗡️ The Soul Sword</h1>
+        <form action="/post" method="POST">
+            <input type="text" name="story_title" placeholder="Story Title" required>
+            <textarea name="story_content" placeholder="Write your story here..." required></textarea>
+            <input type="text" name="story_image" placeholder="Image URL (Optional)">
+            <button id="post-btn" type="submit">Post Story</button>
+        </form>
+    </div>
+
+    <div id="storyFeed">
+        {% for story in stories %}
+        <div class="story-card">
+            <form action="/delete" method="POST" style="margin: 0;">
+                <input type="hidden" name="story_title" value="{{ story.title }}">
+                <button type="submit" class="delete-btn">Delete</button>
+            </form>
+            
+            <h3>{{ story.title }}</h3>
+            <p>{{ story.content }}</p>
+            
+            {% if story.image and story.image != "" %}
+                <img src="{{ story.image }}" style="width:100%; border-radius: 8px; margin-top: 10px;">
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
