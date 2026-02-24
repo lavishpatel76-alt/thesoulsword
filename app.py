@@ -1,12 +1,16 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, jsonify
 import csv
 import os
+import google.generativeai as genai
 
 app = Flask(__name__)
 DATA_FILE = 'stories.csv'
-
-# Set your secret password here
 ADMIN_PASSWORD = "iitj" 
+
+# Configure Gemini API
+# You will set 'GEMINI_API_KEY' in Render's Environment Variables
+genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
+model = genai.GenerativeModel('gemini-1.5-flash')
 
 def read_stories():
     stories = []
@@ -24,11 +28,10 @@ def home():
 
 @app.route('/post', methods=['POST'])
 def post_story():
-    # Password check logic
     user_pass = request.form.get('admin_pass')
     if user_pass != ADMIN_PASSWORD:
-        return "<h1>Unauthorized!</h1><p>Incorrect password. Go back and try again.</p>", 403
-
+        return "Unauthorized!", 403
+    
     title = request.form.get('story_title')
     content = request.form.get('story_content')
     image = request.form.get('story_image')
@@ -40,29 +43,24 @@ def post_story():
         if not file_exists:
             writer.writeheader()
         writer.writerow({'title': title, 'content': content, 'image': image})
+    return redirect('/')
+
+@app.route('/chat', methods=['POST'])
+def chat():
+    user_message = request.json.get('message')
     
-    return redirect('/')
-
-@app.route('/delete', methods=['POST'])
-def delete_story():
-    # Added password check for delete as well to keep it secure
-    user_pass = request.form.get('admin_pass')
-    if user_pass != ADMIN_PASSWORD:
-        return "<h1>Unauthorized!</h1>", 403
-
-    title_to_delete = request.form.get('story_title')
-    stories = []
-    if os.path.exists(DATA_FILE):
-        with open(DATA_FILE, mode='r', encoding='utf-8') as f:
-            reader = csv.DictReader(f)
-            stories = [row for row in reader if row['title'] != title_to_delete]
-            
-    with open(DATA_FILE, mode='w', newline='', encoding='utf-8') as f:
-        fieldnames = ['title', 'content', 'image']
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
-        writer.writeheader()
-        writer.writerows(stories)
-    return redirect('/')
+    # This persona describes you!
+    persona = (
+        "You are the AI version of Lavish, a fresher at IIT Jodhpur studying "
+        "Applied AI and Data Science. You are enthusiastic, smart, and you love "
+        "coding and organic chemistry. Keep your answers brief and friendly."
+    )
+    
+    try:
+        response = model.generate_content(f"{persona}\nUser: {user_message}")
+        return jsonify({"response": response.text})
+    except Exception as e:
+        return jsonify({"response": "I'm sleeping right now. Try again later!"}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))

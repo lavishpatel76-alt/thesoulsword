@@ -3,57 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Soul Sword | Dashboard</title>
+    <title>The Soul Sword | Dashboard & AI</title>
     <style>
-       body { 
-    font-family: 'Inter', 'Segoe UI', sans-serif; 
-    margin: 0; background: #f4f7f6; display: flex; height: 100vh; 
-}
+        body { font-family: 'Inter', sans-serif; margin: 0; background: #f4f7f6; display: flex; height: 100vh; overflow: hidden; }
+        .left-panel { width: 380px; background: white; padding: 30px; border-right: 1px solid #ddd; display: flex; flex-direction: column; }
+        .right-panel { flex: 1; padding: 40px; overflow-y: auto; }
 
-/* Left Sidebar - Input */
-.left-panel { 
-    width: 380px; background: white; padding: 40px 30px; 
-    border-right: 1px solid #e0e0e0; overflow-y: auto; 
-    box-shadow: 4px 0 15px rgba(0,0,0,0.03); 
-}
+        /* Sidebar Styling */
+        input, textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; }
+        #post-btn { background: linear-gradient(135deg, #6c5ce7, #a29bfe); color: white; border: none; padding: 15px; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
-/* Right Feed - Output */
-.right-panel { 
-    flex: 1; padding: 50px; overflow-y: auto; 
-    background: #f8f9fa; 
-}
+        /* AI Chat Box */
+        .chat-container { margin-top: auto; border: 1px solid #eee; border-radius: 12px; padding: 15px; background: #fafafa; }
+        #chat-display { height: 150px; overflow-y: auto; font-size: 14px; margin-bottom: 10px; border-bottom: 1px solid #eee; }
+        .ai-msg { color: #6c5ce7; font-weight: bold; }
 
-h1 { font-size: 26px; color: #2d3436; margin-bottom: 30px; display: flex; align-items: center; gap: 10px; }
-h2 { font-size: 22px; color: #2d3436; margin-bottom: 25px; border-bottom: 2px solid #6c5ce7; display: inline-block; padding-bottom: 5px; }
-
-input, textarea { 
-    width: 100%; padding: 14px; margin-bottom: 20px; 
-    border: 1px solid #dfe6e9; border-radius: 10px; 
-    box-sizing: border-box; font-size: 15px; background: #fafafa;
-    transition: all 0.3s;
-}
-
-input:focus, textarea:focus { 
-    border-color: #6c5ce7; background: #fff; outline: none; box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1); 
-}
-
-/* The Vibrant Button */
-#post-btn { 
-    width: 100%; padding: 16px; border: none; border-radius: 10px; color: white; 
-    font-weight: 700; font-size: 16px; cursor: pointer;
-    background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%); 
-    box-shadow: 0 6px 20px rgba(108, 92, 231, 0.2);
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-#post-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(108, 92, 231, 0.3); }
-
-/* Individual Story Cards */
-.story-card { 
-    background: white; padding: 25px; border-radius: 15px; 
-    margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); 
-    border: 1px solid #f1f2f6; position: relative;
-}
+        /* Story Feed */
+        .story-card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); position: relative; }
+        .story-card img { width: 100%; border-radius: 8px; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -61,35 +28,53 @@ input:focus, textarea:focus {
     <div class="left-panel">
         <h1>🗡️ The Soul Sword</h1>
         <form action="/post" method="POST">
-            <input type="text" name="story_title" placeholder="Story Title" required>
-            <textarea name="story_content" placeholder="Write your story..." required></textarea>
-            <input type="text" name="story_image" placeholder="Image URL (Optional)">
-           
-           <label style="font-weight:bold; font-size: 14px; color: #555;">Security Key:</label>
-           <input type="password" name="admin_pass" placeholder="Enter security key..." required>
-
-            
-            <button id="post-btn" type="submit">Post to Database</button>
+            <input type="text" name="story_title" placeholder="Title" required>
+            <textarea name="story_content" placeholder="Content" required></textarea>
+            <input type="text" name="story_image" placeholder="Image URL">
+            <input type="password" name="admin_pass" placeholder="Admin Key" required>
+            <button id="post-btn" type="submit">Post Story</button>
         </form>
-    </div>
 
-    <div class="right-panel">
-        <h2>Live Story Feed</h2>
-        <div id="storyFeed">
-            {% for story in stories %}
-            <div class="story-card">
-                <form action="/delete" method="POST" class="delete-section">
-                    <input type="hidden" name="story_title" value="{{ story.title }}">
-                    <input type="password" name="admin_pass" class="pass-small" placeholder="Key..." required>
-                    <button type="submit" class="del-btn">Delete</button>
-                </form>
-                <h3 style="margin-top:0;">{{ story.title }}</h3>
-                <p>{{ story.content }}</p>
-                {% if story.image %}<img src="{{ story.image }}" style="width:100%; border-radius: 8px;">{% endif %}
+        <div class="chat-container">
+            <h3>💬 Chat with Lavish AI</h3>
+            <div id="chat-display"></div>
+            <div style="display: flex; gap: 5px;">
+                <input type="text" id="chat-input" placeholder="Ask AI Lavish..." style="margin:0; padding: 8px;">
+                <button onclick="sendMessage()" style="padding: 8px; cursor:pointer;">Send</button>
             </div>
-            {% endfor %}
         </div>
     </div>
 
+    <div class="right-panel">
+        <h2>Live Feed</h2>
+        {% for story in stories %}
+        <div class="story-card">
+            <h3>{{ story.title }}</h3>
+            <p>{{ story.content }}</p>
+            {% if story.image %}<img src="{{ story.image }}">{% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        async function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const display = document.getElementById('chat-display');
+            if(!input.value) return;
+
+            display.innerHTML += `<div><b>You:</b> ${input.value}</div>`;
+            const msg = input.value;
+            input.value = '';
+
+            const response = await fetch('/chat', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({message: msg})
+            });
+            const data = await response.json();
+            display.innerHTML += `<div><span class="ai-msg">AI:</span> ${data.response}</div>`;
+            display.scrollTop = display.scrollHeight;
+        }
+    </script>
 </body>
 </html>
