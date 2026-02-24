@@ -49,26 +49,23 @@ def post_story():
 @app.route('/chat', methods=['POST'])
 def chat():
     user_message = request.json.get('message')
-    
-    # We load the key here to ensure it's fresh from Render's environment
     api_key = os.environ.get("GEMINI_API_KEY")
-    if not api_key:
-        return jsonify({"response": "AI: I can't find my API Key in Render settings!"})
     
-    # Re-configuring inside the function ensures the key is active
+    if not api_key:
+        return jsonify({"response": "AI: API Key missing in Render settings!"})
+    
     genai.configure(api_key=api_key)
     
-    # IMPORTANT: We use 'gemini-pro' here to match your top configuration
-    current_model = genai.GenerativeModel('gemini-pro')
+    # Updated to the Gemini 2.5 Flash model as seen in your search
+    model = genai.GenerativeModel('gemini-2.5-flash')
     
-    persona = "You are an AI version of Lavish, a student at IIT Jodhpur studying Applied AI and Data Science. Be helpful and smart."
+    persona = "You are an AI version of Lavish, a student at IIT Jodhpur studying Applied AI and Data Science. Be helpful, smart, and concise."
     
     try:
-        # Use 'current_model' instead of the global 'model' to avoid conflicts
-        response = current_model.generate_content(f"{persona}\nUser: {user_message}")
+        response = model.generate_content(f"{persona}\nUser: {user_message}")
         return jsonify({"response": response.text})
     except Exception as e:
-        # This will tell us if there is a library version issue or a quota issue
+        # This will help us see if the library needs an update to support 2.5
         return jsonify({"response": f"AI Error: {str(e)}"}), 500
     
 if __name__ == '__main__':
