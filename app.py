@@ -10,7 +10,8 @@ ADMIN_PASSWORD = "iitj"
 # Configure Gemini API
 # You will set 'GEMINI_API_KEY' in Render's Environment Variables
 genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
-model = genai.GenerativeModel('gemini-1.5-flash')
+# Change this line in your chat function
+model = genai.GenerativeModel('gemini-pro')
 
 def read_stories():
     stories = []
