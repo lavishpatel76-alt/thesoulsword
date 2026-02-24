@@ -49,18 +49,21 @@ def post_story():
 def chat():
     user_message = request.json.get('message')
     
-    # This persona describes you!
-    persona = (
-        "You are the AI version of Lavish, a fresher at IIT Jodhpur studying "
-        "Applied AI and Data Science. You are enthusiastic, smart, and you love "
-        "coding and organic chemistry. Keep your answers brief and friendly."
-    )
+    # Force the key to load INSIDE the function so it's always fresh
+    api_key = os.environ.get("GEMINI_API_KEY")
+    if not api_key:
+        return jsonify({"response": "AI: I can't find my API Key in Render settings!"})
+    
+    genai.configure(api_key=api_key)
+    model = genai.GenerativeModel('gemini-1.5-flash')
+    
+    persona = "You are an AI version of Lavish, a student at IIT Jodhpur..."
     
     try:
         response = model.generate_content(f"{persona}\nUser: {user_message}")
         return jsonify({"response": response.text})
     except Exception as e:
-        return jsonify({"response": "I'm sleeping right now. Try again later!"}), 500
-
+        return jsonify({"response": f"AI Error: {str(e)}"}), 500
+    
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
