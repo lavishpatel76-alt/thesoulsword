@@ -5,29 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Soul Sword | Dashboard</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f0f2f5; display: flex; height: 100vh; }
-        
-        /* Dashboard Split */
-        .left-panel { width: 400px; background: white; padding: 30px; border-right: 1px solid #ddd; overflow-y: auto; box-shadow: 2px 0 10px rgba(0,0,0,0.05); }
-        .right-panel { flex: 1; padding: 40px; overflow-y: auto; }
+       body { 
+    font-family: 'Inter', 'Segoe UI', sans-serif; 
+    margin: 0; background: #f4f7f6; display: flex; height: 100vh; 
+}
 
-        h1 { font-size: 24px; color: #333; margin-bottom: 20px; }
-        input, textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 15px; }
-        textarea { height: 120px; }
+/* Left Sidebar - Input */
+.left-panel { 
+    width: 380px; background: white; padding: 40px 30px; 
+    border-right: 1px solid #e0e0e0; overflow-y: auto; 
+    box-shadow: 4px 0 15px rgba(0,0,0,0.03); 
+}
 
-        /* Colorful Gradient Button */
-        #post-btn { 
-            width: 100%; padding: 14px; border: none; border-radius: 8px; color: white; 
-            font-weight: bold; font-size: 16px; cursor: pointer;
-            background: linear-gradient(45deg, #ff00cc, #3333ff); 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
+/* Right Feed - Output */
+.right-panel { 
+    flex: 1; padding: 50px; overflow-y: auto; 
+    background: #f8f9fa; 
+}
 
-        /* Story Cards */
-        .story-card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: relative; }
-        .delete-section { position: absolute; top: 15px; right: 15px; display: flex; gap: 5px; }
-        .pass-small { width: 80px; padding: 5px; font-size: 12px; margin: 0; }
-        .del-btn { background: #ff4d4d; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+h1 { font-size: 26px; color: #2d3436; margin-bottom: 30px; display: flex; align-items: center; gap: 10px; }
+h2 { font-size: 22px; color: #2d3436; margin-bottom: 25px; border-bottom: 2px solid #6c5ce7; display: inline-block; padding-bottom: 5px; }
+
+input, textarea { 
+    width: 100%; padding: 14px; margin-bottom: 20px; 
+    border: 1px solid #dfe6e9; border-radius: 10px; 
+    box-sizing: border-box; font-size: 15px; background: #fafafa;
+    transition: all 0.3s;
+}
+
+input:focus, textarea:focus { 
+    border-color: #6c5ce7; background: #fff; outline: none; box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1); 
+}
+
+/* The Vibrant Button */
+#post-btn { 
+    width: 100%; padding: 16px; border: none; border-radius: 10px; color: white; 
+    font-weight: 700; font-size: 16px; cursor: pointer;
+    background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%); 
+    box-shadow: 0 6px 20px rgba(108, 92, 231, 0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#post-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(108, 92, 231, 0.3); }
+
+/* Individual Story Cards */
+.story-card { 
+    background: white; padding: 25px; border-radius: 15px; 
+    margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); 
+    border: 1px solid #f1f2f6; position: relative;
+}
     </style>
 </head>
 <body>
@@ -38,9 +64,10 @@
             <input type="text" name="story_title" placeholder="Story Title" required>
             <textarea name="story_content" placeholder="Write your story..." required></textarea>
             <input type="text" name="story_image" placeholder="Image URL (Optional)">
-            
-            <label style="font-weight:bold; font-size: 14px; color: #555;">Security Key:</label>
-            <input type="password" name="admin_pass" placeholder="Enter 'iitj' to post" required>
+           
+           <label style="font-weight:bold; font-size: 14px; color: #555;">Security Key:</label>
+           <input type="password" name="admin_pass" placeholder="Enter security key..." required>
+
             
             <button id="post-btn" type="submit">Post to Database</button>
         </form>
