@@ -3,8 +3,10 @@ import csv
 import os
 
 app = Flask(__name__)
-# IMPORTANT: Ensure this matches the file name in your sidebar
 DATA_FILE = 'stories.csv'
+
+# Set your secret password here
+ADMIN_PASSWORD = "iitj" 
 
 def read_stories():
     stories = []
@@ -22,24 +24,32 @@ def home():
 
 @app.route('/post', methods=['POST'])
 def post_story():
+    # Password check logic
+    user_pass = request.form.get('admin_pass')
+    if user_pass != ADMIN_PASSWORD:
+        return "<h1>Unauthorized!</h1><p>Incorrect password. Go back and try again.</p>", 403
+
     title = request.form.get('story_title')
     content = request.form.get('story_content')
     image = request.form.get('story_image')
     
-    # This block creates the file if it doesn't exist
     file_exists = os.path.exists(DATA_FILE)
     with open(DATA_FILE, mode='a', newline='', encoding='utf-8') as f:
         fieldnames = ['title', 'content', 'image']
         writer = csv.DictWriter(f, fieldnames=fieldnames)
-        
         if not file_exists:
-            writer.writeheader() # Writes the top row (headers)
+            writer.writeheader()
         writer.writerow({'title': title, 'content': content, 'image': image})
     
     return redirect('/')
 
 @app.route('/delete', methods=['POST'])
 def delete_story():
+    # Added password check for delete as well to keep it secure
+    user_pass = request.form.get('admin_pass')
+    if user_pass != ADMIN_PASSWORD:
+        return "<h1>Unauthorized!</h1>", 403
+
     title_to_delete = request.form.get('story_title')
     stories = []
     if os.path.exists(DATA_FILE):
@@ -56,6 +66,3 @@ def delete_story():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
-   
-    
-    
