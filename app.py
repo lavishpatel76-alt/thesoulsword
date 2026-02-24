@@ -50,20 +50,25 @@ def post_story():
 def chat():
     user_message = request.json.get('message')
     
-    # Force the key to load INSIDE the function so it's always fresh
+    # We load the key here to ensure it's fresh from Render's environment
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
         return jsonify({"response": "AI: I can't find my API Key in Render settings!"})
     
+    # Re-configuring inside the function ensures the key is active
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel('gemini-1.5-flash')
     
-    persona = "You are an AI version of Lavish, a student at IIT Jodhpur..."
+    # IMPORTANT: We use 'gemini-pro' here to match your top configuration
+    current_model = genai.GenerativeModel('gemini-pro')
+    
+    persona = "You are an AI version of Lavish, a student at IIT Jodhpur studying Applied AI and Data Science. Be helpful and smart."
     
     try:
-        response = model.generate_content(f"{persona}\nUser: {user_message}")
+        # Use 'current_model' instead of the global 'model' to avoid conflicts
+        response = current_model.generate_content(f"{persona}\nUser: {user_message}")
         return jsonify({"response": response.text})
     except Exception as e:
+        # This will tell us if there is a library version issue or a quota issue
         return jsonify({"response": f"AI Error: {str(e)}"}), 500
     
 if __name__ == '__main__':
