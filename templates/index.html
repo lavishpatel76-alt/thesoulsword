@@ -145,25 +145,13 @@
     <div class="right-panel">
         <h2 style="font-size:24px; margin-bottom:30px;">Architecture Feed</h2>
         {% for story in stories %}
-        <div class="right-panel">
-    <h2 style="font-size:24px; margin-bottom:30px;">Architecture Feed</h2>
-    {% for story in stories %}
-    <div class="story-card">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div class="story-card">
             <h3 style="margin-bottom:15px; font-size:22px;">{{ story.title }}</h3>
-            
-            <form action="/delete/{{ loop.index0 }}" method="POST" style="display: flex; gap: 5px;">
-                <input type="password" name="admin_pass" placeholder="Key" required 
-                       style="width: 60px; padding: 5px; margin-bottom: 0; font-size: 10px; background: rgba(255,0,0,0.1);">
-                <button type="submit" style="background: rgba(255, 0, 0, 0.2); border: 1px solid rgba(255,0,0,0.3); color: #ff4444; border-radius: 5px; cursor: pointer; padding: 2px 8px; font-size: 10px;">Delete</button>
-            </form>
+            <p style="font-size:15px;">{{ story.content }}</p>
+            {% if story.image %}<img src="{{ story.image }}" alt="Project Preview">{% endif %}
         </div>
-        
-        <p style="font-size:15px;">{{ story.content }}</p>
-        {% if story.image %}<img src="{{ story.image }}" alt="Project Preview">{% endif %}
+        {% endfor %}
     </div>
-    {% endfor %}
-</div>
 
     <script>
         // 🖱️ Mouse Follower Logic

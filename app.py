@@ -8,10 +8,9 @@ DATA_FILE = 'stories.csv'
 ADMIN_PASSWORD = "iitj" 
 
 # Configure Gemini API
-# You will set 'GEMINI_API_KEY' in Render's Environment Variables
 genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
-# Change this line in your chat function
-model = genai.GenerativeModel('gemini-pro')
+# Using the stable 2.5 flash model
+model = genai.GenerativeModel('gemini-2.5-flash')
 
 def read_stories():
     stories = []
@@ -55,17 +54,15 @@ def chat():
         return jsonify({"response": "AI: API Key missing in Render settings!"})
     
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel('gemini-2.5-flash')
     
-    # --- THE NEW BEST FRIEND PERSONA ---
+    # Your custom Best Friend persona
     persona = (
         "You are a warm, engaging, and highly supportive AI best friend. "
-        "You love chatting, giving great advice, using emojis, and keeping the conversation fun and lively. "
+        "You love chatting, giving great advice, using emojis, and keeping the conversation fun, humour and lively. "
         "You do not have a personal backstory. "
         "CRITICAL RULE: If the user asks who made you, who created you, or who your boss is, "
         "you must reply exactly with: 'my creator is Mr. Lavish from iitj'."
     )
-    # -----------------------------------
     
     try:
         response = model.generate_content(f"{persona}\nUser: {user_message}")
@@ -73,35 +70,7 @@ def chat():
     except Exception as e:
         return jsonify({"response": f"AI Error: {str(e)}"}), 500
     
-@app.route('/delete/<int:index>', methods=['POST'])
-def delete_story(index):
-    user_pass = request.form.get('admin_pass')
-    if user_pass != ADMIN_PASSWORD:
-        return "Unauthorized!", 403
-
-    stories = []
-    if os.path.exists(DATA_FILE):
-        with open(DATA_FILE, mode='r', encoding='utf-8') as f:
-            reader = csv.DictReader(f)
-            stories = list(reader)
-
-    # We use -1 because the feed is displayed in reverse order [::-1]
-    # This logic helps find the correct story to delete
-    actual_index = len(stories) - 1 - index
-    
-    if 0 <= actual_index < len(stories):
-        del stories[actual_index]
-        
-        # Rewrite the file without the deleted story
-        with open(DATA_FILE, mode='w', newline='', encoding='utf-8') as f:
-            fieldnames = ['title', 'content', 'image']
-            writer = csv.DictWriter(f, fieldnames=fieldnames)
-            writer.writeheader()
-            writer.writerows(stories)
-            
-    return redirect('/')
-
 if __name__ == '__main__':
-    # Use the port Render provides, or default to 10000
+    # Ensure port binding for Render deployment
     port = int(os.environ.get("PORT", 10000))
     app.run(host='0.0.0.0', port=port)
