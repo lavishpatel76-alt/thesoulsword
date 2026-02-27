@@ -20,9 +20,7 @@
             margin: 0; 
             background: #0f172a;
             color: #f8fafc;
-            display: flex; 
-            height: 100vh; 
-            overflow: hidden; 
+            overflow: hidden; /* Prevents scrollbars on the main window */
         }
 
         /* 🌌 Spline 3D Background Layer */
@@ -35,35 +33,44 @@
             z-index: -1; 
         }
 
-        /* ⬅️ LEFT PANEL (AI & Forms) */
+        /* ⬅️ LEFT PANEL (Fixed to Left) */
         .left-panel { 
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 380px; 
+            height: 100vh;
             background: var(--glass); 
             backdrop-filter: blur(20px); 
             -webkit-backdrop-filter: blur(20px);
             border-right: 1px solid rgba(255, 255, 255, 0.1); 
             padding: 30px; 
+            box-sizing: border-box;
             display: flex; 
             flex-direction: column; 
             box-shadow: 10px 0 30px rgba(0,0,0,0.5);
             z-index: 10;
-            position: relative;
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .left-panel.collapsed { transform: translateX(-100%); }
 
-        /* ➡️ RIGHT PANEL (Architecture Feed) */
+        /* ➡️ RIGHT PANEL (Fixed to Right) */
         .right-panel { 
-            flex: 1; 
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 450px; 
+            height: 100vh;
             padding: 40px; 
+            box-sizing: border-box;
             overflow-y: auto; 
             z-index: 10; 
-            position: relative;
-            background: rgba(15, 23, 42, 0.3);
-            backdrop-filter: blur(5px);
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(8px);
             border-left: 1px solid rgba(255, 255, 255, 0.05);
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .right-panel.collapsed { transform: translateX(100%); }
@@ -73,23 +80,28 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 25px;
-            height: 60px;
-            background: rgba(15, 23, 42, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 30px;
+            height: 70px;
+            background: #0f172a;
+            border: 1px solid rgba(255, 255, 255, 0.3);
             color: #fff;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             z-index: 100;
-            font-size: 14px;
+            font-size: 16px;
             transition: 0.2s;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
         }
 
         .toggle-btn:hover { background: var(--primary); border-color: var(--primary); }
-        .left-toggle { right: -25px; border-radius: 0 8px 8px 0; border-left: none; }
-        .right-toggle { left: -25px; border-radius: 8px 0 0 8px; border-right: none; }
+        
+        /* The left button sticks out to the right */
+        .left-toggle { right: -30px; border-radius: 0 8px 8px 0; border-left: none; }
+        
+        /* The right button sticks out to the left */
+        .right-toggle { left: -30px; border-radius: 8px 0 0 8px; border-right: none; }
 
         /* UI ELEMENTS */
         h1 { font-size: 32px; font-weight: 800; margin: 0 0 25px 0; background: linear-gradient(to right, #fff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -102,26 +114,29 @@
         .user-msg { color: var(--primary); font-weight: bold; }
         .ai-msg { color: var(--secondary); font-weight: bold; }
 
-        /* 📍 CORNER FOOTER */
+        /* 📍 CORNER FOOTER (Bulletproof Visibility) */
         .corner-footer {
             position: fixed;
-            bottom: 22px;
+            bottom: 20px;
             right: 175px; 
             display: flex;
-            gap: 25px;
-            z-index: 5;
-            align-items: center;
+            gap: 20px;
+            z-index: 1000; /* Forces it above everything else */
+            background: rgba(0, 0, 0, 0.6); /* Adds a dark pill background so text doesn't blend into the right panel */
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(5px);
         }
         .corner-footer a {
-            color: rgba(255, 255, 255, 0.4);
+            color: #f8fafc;
             text-decoration: none;
             font-size: 11px;
             font-weight: 800;
             letter-spacing: 1px;
             transition: 0.3s;
-            text-transform: uppercase;
         }
-        .corner-footer a:hover { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
+        .corner-footer a:hover { color: var(--primary); }
 
         /* Story Feed Cards */
         .story-card { background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); padding: 25px; border-radius: 20px; margin-bottom: 25px; }
@@ -172,7 +187,6 @@
     </div>
 
     <script>
-        // --- 🚪 Sliding Door Logic ---
         function toggleLeft() {
             const panel = document.getElementById('left-panel');
             const btn = document.getElementById('left-btn');
@@ -187,7 +201,6 @@
             btn.innerHTML = panel.classList.contains('collapsed') ? '◀' : '▶';
         }
 
-        // --- 💬 AI Chat Logic ---
         function handleEnter(e) { if(e.key === 'Enter') sendMessage(); }
 
         async function sendMessage() {
