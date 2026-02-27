@@ -12,13 +12,14 @@
         :root {
             --primary: #a855f7;
             --secondary: #ec4899;
-            --glass: rgba(15, 23, 42, 0.8);
+            /* Ultra-clear glass effect */
+            --glass: rgba(10, 15, 30, 0.25); 
         }
 
         body { 
             font-family: 'Inter', sans-serif; 
             margin: 0; 
-            background: #0f172a;
+            background: #050510;
             color: #f8fafc;
             height: 100vh; 
             overflow: hidden; 
@@ -39,17 +40,18 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 380px; 
+            width: 320px; /* Slimmed down */
             height: 100vh;
             background: var(--glass); 
-            backdrop-filter: blur(20px); 
-            border-right: 1px solid rgba(255, 255, 255, 0.1); 
-            padding: 30px; 
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px);
+            border-right: 1px solid rgba(255, 255, 255, 0.08); 
+            padding: 25px; 
             box-sizing: border-box;
             display: flex; 
             flex-direction: column; 
             z-index: 10;
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         .left-panel.collapsed { transform: translateX(-100%); }
@@ -59,29 +61,30 @@
             position: fixed;
             top: 0;
             right: 0;
-            width: 420px; 
+            width: 340px; /* Slimmed down */
             height: 100vh;
             background: var(--glass); 
-            backdrop-filter: blur(20px); 
-            border-left: 1px solid rgba(255, 255, 255, 0.1); 
-            padding: 40px; 
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px);
+            border-left: 1px solid rgba(255, 255, 255, 0.08); 
+            padding: 25px; 
             box-sizing: border-box;
             overflow-y: auto; 
             z-index: 10; 
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         .right-panel.collapsed { transform: translateX(100%); }
 
-        /* 🏹 TOGGLE ARROWS */
+        /* 🏹 NEW TOGGLE BUTTONS (Floating Circles) */
         .toggle-btn {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 25px;
-            height: 60px;
-            background: rgba(15, 23, 42, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 36px;
+            height: 36px;
+            background: var(--primary);
+            border-radius: 50%;
             color: white;
             display: flex;
             align-items: center;
@@ -89,49 +92,56 @@
             cursor: pointer;
             z-index: 100;
             font-size: 14px;
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
+            transition: 0.3s;
+            border: 2px solid rgba(255,255,255,0.2);
         }
 
-        .left-toggle { right: -25px; border-radius: 0 8px 8px 0; }
-        .right-toggle { left: -25px; border-radius: 8px 0 0 8px; }
+        .toggle-btn:hover { transform: translateY(-50%) scale(1.1); background: var(--secondary); }
+        .left-toggle { right: -18px; } /* Sticks exactly halfway out */
+        .right-toggle { left: -18px; } /* Sticks exactly halfway out */
 
         /* UI ELEMENTS */
-        h1 { font-size: 28px; font-weight: 800; margin: 0 0 25px 0; background: linear-gradient(to right, #fff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        input, textarea { width: 100%; padding: 12px; margin-bottom: 12px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; color: white; outline: none; box-sizing: border-box; }
-        #post-btn { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; padding: 14px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; }
+        h1 { font-size: 24px; font-weight: 800; margin: 0 0 20px 0; background: linear-gradient(to right, #fff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        input, textarea { width: 100%; padding: 10px; margin-bottom: 10px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: white; outline: none; box-sizing: border-box; font-size: 13px;}
+        #post-btn { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; font-size: 13px;}
 
         /* AI CHAT BOX */
-        .chat-container { margin-top: auto; background: rgba(0,0,0,0.4); border-radius: 16px; padding: 15px; border: 1px solid rgba(255,255,255,0.05); }
-        #chat-display { height: 120px; overflow-y: auto; font-size: 13px; margin-bottom: 10px; }
+        .chat-container { margin-top: auto; background: rgba(0,0,0,0.3); border-radius: 12px; padding: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        #chat-display { height: 120px; overflow-y: auto; font-size: 12px; margin-bottom: 10px; }
 
-        /* 📍 ALIGNED CONTACT LINKS (Bottom Right) */
+        /* 📍 BULLETPROOF CORNER FOOTER */
         .corner-footer {
             position: fixed;
             bottom: 20px;
-            right: 170px; /* Aligned with Spline Badge */
+            right: 20px; /* Locks it to the absolute bottom right of the screen */
             display: flex;
-            gap: 20px;
-            z-index: 5;
-            background: rgba(0, 0, 0, 0.6);
-            padding: 8px 15px;
+            gap: 15px;
+            z-index: 9999; /* Forces it above the right panel completely */
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
             border-radius: 30px;
             border: 1px solid rgba(255,255,255,0.1);
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(10px);
         }
         .corner-footer a {
             color: #f8fafc;
             text-decoration: none;
             font-size: 11px;
             font-weight: 800;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
             text-transform: uppercase;
+            transition: 0.3s;
         }
         .corner-footer a:hover { color: var(--primary); }
 
         /* Feed Cards */
-        .story-card { background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 20px; }
+        .story-card { background: rgba(255, 255, 255, 0.03); padding: 15px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.08); margin-bottom: 15px; }
+        .story-card h3 { margin-top: 0; font-size: 16px; margin-bottom: 5px;}
+        .story-card p { font-size: 13px; color: #cbd5e1; margin-bottom: 0;}
         
         ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
     </style>
 </head>
 <body>
@@ -155,28 +165,29 @@
         </form>
 
         <div class="chat-container">
-            <h3 style="font-size:14px; color:var(--primary); margin-top:0;">💬 Best Friend AI</h3>
+            <h3 style="font-size:13px; color:var(--primary); margin-top:0; margin-bottom:10px;">💬 Best Friend AI</h3>
             <div id="chat-display"></div>
-            <div style="display:flex; gap:8px;">
+            <div style="display:flex; gap:5px;">
                 <input type="text" id="chat-input" placeholder="Message..." onkeypress="handleEnter(event)" style="margin-bottom:0;">
-                <button onclick="sendMessage()" style="background:var(--primary); border:none; color:white; border-radius:8px; padding:0 10px; cursor:pointer;">Send</button>
+                <button onclick="sendMessage()" style="background:var(--primary); border:none; color:white; border-radius:8px; padding:0 12px; cursor:pointer;">Send</button>
             </div>
         </div>
     </div>
 
     <div class="right-panel" id="right-panel">
         <div class="toggle-btn right-toggle" onclick="toggleRight()" id="right-arrow">▶</div>
-        <h2 style="margin-top:0; margin-bottom:25px; font-size:22px;">Architecture Feed</h2>
+        <h2 style="margin-top:0; margin-bottom:20px; font-size:20px;">Architecture Feed</h2>
         {% for story in stories %}
         <div class="story-card">
-            <h3 style="margin-top:0; font-size:18px;">{{ story.title }}</h3>
-            <p style="color:#cbd5e1; line-height:1.5; font-size:13px;">{{ story.content }}</p>
-            {% if story.image %}<img src="{{ story.image }}" style="width:100%; border-radius:10px; margin-top:10px;" alt="Preview">{% endif %}
+            <h3>{{ story.title }}</h3>
+            <p>{{ story.content }}</p>
+            {% if story.image %}<img src="{{ story.image }}" style="width:100%; border-radius:8px; margin-top:10px;" alt="Preview">{% endif %}
         </div>
         {% endfor %}
     </div>
 
     <script>
+        // Smooth UI Toggle Logic
         function toggleLeft() {
             const p = document.getElementById('left-panel');
             const a = document.getElementById('left-arrow');
@@ -191,13 +202,14 @@
             a.innerHTML = p.classList.contains('collapsed') ? '◀' : '▶';
         }
 
+        // AI Chat Logic
         function handleEnter(e) { if(e.key === 'Enter') sendMessage(); }
 
         async function sendMessage() {
             const input = document.getElementById('chat-input');
             const display = document.getElementById('chat-display');
             if(!input.value) return;
-            display.innerHTML += `<div><span style="color:var(--primary); font-weight:bold;">Me:</span> ${input.value}</div>`;
+            display.innerHTML += `<div style="margin-bottom:5px;"><span style="color:var(--primary); font-weight:bold;">Me:</span> ${input.value}</div>`;
             const msg = input.value;
             input.value = '';
             display.scrollTop = display.scrollHeight;
@@ -209,7 +221,7 @@
                     body: JSON.stringify({message: msg})
                 });
                 const data = await response.json();
-                display.innerHTML += `<div><span style="color:var(--secondary); font-weight:bold;">AI:</span> ${data.response}</div>`;
+                display.innerHTML += `<div style="margin-bottom:5px;"><span style="color:var(--secondary); font-weight:bold;">AI:</span> ${data.response}</div>`;
                 display.scrollTop = display.scrollHeight;
             } catch (error) {
                 display.innerHTML += `<div style="color:red; font-size:11px;">Network error.</div>`;
