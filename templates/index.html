@@ -12,7 +12,7 @@
         :root {
             --primary: #a855f7;
             --secondary: #ec4899;
-            --glass: rgba(15, 23, 42, 0.75);
+            --glass: rgba(15, 23, 42, 0.8);
         }
 
         body { 
@@ -20,10 +20,11 @@
             margin: 0; 
             background: #0f172a;
             color: #f8fafc;
-            overflow: hidden; /* Prevents scrollbars on the main window */
+            height: 100vh; 
+            overflow: hidden; 
         }
 
-        /* 🌌 Spline 3D Background Layer */
+        /* 🌌 Spline 3D Background */
         #canvas3d {
             position: fixed;
             top: 0;
@@ -33,7 +34,7 @@
             z-index: -1; 
         }
 
-        /* ⬅️ LEFT PANEL (Fixed to Left) */
+        /* ⬅️ LEFT PANEL */
         .left-panel { 
             position: fixed;
             top: 0;
@@ -42,35 +43,32 @@
             height: 100vh;
             background: var(--glass); 
             backdrop-filter: blur(20px); 
-            -webkit-backdrop-filter: blur(20px);
             border-right: 1px solid rgba(255, 255, 255, 0.1); 
             padding: 30px; 
             box-sizing: border-box;
             display: flex; 
             flex-direction: column; 
-            box-shadow: 10px 0 30px rgba(0,0,0,0.5);
             z-index: 10;
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .left-panel.collapsed { transform: translateX(-100%); }
 
-        /* ➡️ RIGHT PANEL (Fixed to Right) */
+        /* ➡️ RIGHT PANEL (Architecture Feed) */
         .right-panel { 
             position: fixed;
             top: 0;
             right: 0;
-            width: 450px; 
+            width: 420px; 
             height: 100vh;
+            background: var(--glass); 
+            backdrop-filter: blur(20px); 
+            border-left: 1px solid rgba(255, 255, 255, 0.1); 
             padding: 40px; 
             box-sizing: border-box;
             overflow-y: auto; 
             z-index: 10; 
-            background: rgba(15, 23, 42, 0.5);
-            backdrop-filter: blur(8px);
-            border-left: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .right-panel.collapsed { transform: translateX(100%); }
@@ -80,51 +78,42 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 30px;
-            height: 70px;
-            background: #0f172a;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: #fff;
+            width: 25px;
+            height: 60px;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             z-index: 100;
-            font-size: 16px;
-            transition: 0.2s;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            font-size: 14px;
         }
 
-        .toggle-btn:hover { background: var(--primary); border-color: var(--primary); }
-        
-        /* The left button sticks out to the right */
-        .left-toggle { right: -30px; border-radius: 0 8px 8px 0; border-left: none; }
-        
-        /* The right button sticks out to the left */
-        .right-toggle { left: -30px; border-radius: 8px 0 0 8px; border-right: none; }
+        .left-toggle { right: -25px; border-radius: 0 8px 8px 0; }
+        .right-toggle { left: -25px; border-radius: 8px 0 0 8px; }
 
         /* UI ELEMENTS */
-        h1 { font-size: 32px; font-weight: 800; margin: 0 0 25px 0; background: linear-gradient(to right, #fff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        h1 { font-size: 28px; font-weight: 800; margin: 0 0 25px 0; background: linear-gradient(to right, #fff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         input, textarea { width: 100%; padding: 12px; margin-bottom: 12px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; color: white; outline: none; box-sizing: border-box; }
         #post-btn { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; padding: 14px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; }
 
-        /* AI CHAT */
-        .chat-container { margin-top: auto; background: rgba(0,0,0,0.4); border-radius: 16px; padding: 20px; border: 1px solid rgba(255,255,255,0.05); }
-        #chat-display { height: 150px; overflow-y: auto; font-size: 13px; margin-bottom: 10px; }
-        .user-msg { color: var(--primary); font-weight: bold; }
-        .ai-msg { color: var(--secondary); font-weight: bold; }
+        /* AI CHAT BOX */
+        .chat-container { margin-top: auto; background: rgba(0,0,0,0.4); border-radius: 16px; padding: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        #chat-display { height: 120px; overflow-y: auto; font-size: 13px; margin-bottom: 10px; }
 
-        /* 📍 CORNER FOOTER (Bulletproof Visibility) */
+        /* 📍 ALIGNED CONTACT LINKS (Bottom Right) */
         .corner-footer {
             position: fixed;
             bottom: 20px;
-            right: 175px; 
+            right: 170px; /* Aligned with Spline Badge */
             display: flex;
             gap: 20px;
-            z-index: 1000; /* Forces it above everything else */
-            background: rgba(0, 0, 0, 0.6); /* Adds a dark pill background so text doesn't blend into the right panel */
+            z-index: 5;
+            background: rgba(0, 0, 0, 0.6);
             padding: 8px 15px;
-            border-radius: 20px;
+            border-radius: 30px;
             border: 1px solid rgba(255,255,255,0.1);
             backdrop-filter: blur(5px);
         }
@@ -133,15 +122,15 @@
             text-decoration: none;
             font-size: 11px;
             font-weight: 800;
-            letter-spacing: 1px;
-            transition: 0.3s;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
         .corner-footer a:hover { color: var(--primary); }
 
-        /* Story Feed Cards */
-        .story-card { background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); padding: 25px; border-radius: 20px; margin-bottom: 25px; }
-
-        ::-webkit-scrollbar { width: 5px; }
+        /* Feed Cards */
+        .story-card { background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 20px; }
+        
+        ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
     </style>
 </head>
@@ -155,7 +144,7 @@
     </div>
 
     <div class="left-panel" id="left-panel">
-        <div class="toggle-btn left-toggle" id="left-btn" onclick="toggleLeft()">◀</div>
+        <div class="toggle-btn left-toggle" onclick="toggleLeft()" id="left-arrow">◀</div>
         <h1>The Soul Sword</h1>
         <form action="/post" method="POST">
             <input type="text" name="story_title" placeholder="Project Title" required>
@@ -164,41 +153,42 @@
             <input type="password" name="admin_pass" placeholder="Admin Key" required>
             <button id="post-btn" type="submit">Post Project</button>
         </form>
+
         <div class="chat-container">
             <h3 style="font-size:14px; color:var(--primary); margin-top:0;">💬 Best Friend AI</h3>
             <div id="chat-display"></div>
             <div style="display:flex; gap:8px;">
                 <input type="text" id="chat-input" placeholder="Message..." onkeypress="handleEnter(event)" style="margin-bottom:0;">
-                <button onclick="sendMessage()" style="background:var(--primary); border:none; color:white; border-radius:8px; padding:0 15px; cursor:pointer;">Send</button>
+                <button onclick="sendMessage()" style="background:var(--primary); border:none; color:white; border-radius:8px; padding:0 10px; cursor:pointer;">Send</button>
             </div>
         </div>
     </div>
 
     <div class="right-panel" id="right-panel">
-        <div class="toggle-btn right-toggle" id="right-btn" onclick="toggleRight()">▶</div>
-        <h2 style="margin-top:0; margin-bottom:30px;">Architecture Feed</h2>
+        <div class="toggle-btn right-toggle" onclick="toggleRight()" id="right-arrow">▶</div>
+        <h2 style="margin-top:0; margin-bottom:25px; font-size:22px;">Architecture Feed</h2>
         {% for story in stories %}
         <div class="story-card">
-            <h3 style="margin-top:0;">{{ story.title }}</h3>
-            <p style="color:#cbd5e1; line-height:1.6; font-size:14px;">{{ story.content }}</p>
-            {% if story.image %}<img src="{{ story.image }}" style="width:100%; border-radius:12px; margin-top:15px;" alt="Preview">{% endif %}
+            <h3 style="margin-top:0; font-size:18px;">{{ story.title }}</h3>
+            <p style="color:#cbd5e1; line-height:1.5; font-size:13px;">{{ story.content }}</p>
+            {% if story.image %}<img src="{{ story.image }}" style="width:100%; border-radius:10px; margin-top:10px;" alt="Preview">{% endif %}
         </div>
         {% endfor %}
     </div>
 
     <script>
         function toggleLeft() {
-            const panel = document.getElementById('left-panel');
-            const btn = document.getElementById('left-btn');
-            panel.classList.toggle('collapsed');
-            btn.innerHTML = panel.classList.contains('collapsed') ? '▶' : '◀';
+            const p = document.getElementById('left-panel');
+            const a = document.getElementById('left-arrow');
+            p.classList.toggle('collapsed');
+            a.innerHTML = p.classList.contains('collapsed') ? '▶' : '◀';
         }
 
         function toggleRight() {
-            const panel = document.getElementById('right-panel');
-            const btn = document.getElementById('right-btn');
-            panel.classList.toggle('collapsed');
-            btn.innerHTML = panel.classList.contains('collapsed') ? '◀' : '▶';
+            const p = document.getElementById('right-panel');
+            const a = document.getElementById('right-arrow');
+            p.classList.toggle('collapsed');
+            a.innerHTML = p.classList.contains('collapsed') ? '◀' : '▶';
         }
 
         function handleEnter(e) { if(e.key === 'Enter') sendMessage(); }
@@ -207,8 +197,7 @@
             const input = document.getElementById('chat-input');
             const display = document.getElementById('chat-display');
             if(!input.value) return;
-
-            display.innerHTML += `<div><span class="user-msg">Me:</span> ${input.value}</div>`;
+            display.innerHTML += `<div><span style="color:var(--primary); font-weight:bold;">Me:</span> ${input.value}</div>`;
             const msg = input.value;
             input.value = '';
             display.scrollTop = display.scrollHeight;
@@ -220,7 +209,7 @@
                     body: JSON.stringify({message: msg})
                 });
                 const data = await response.json();
-                display.innerHTML += `<div><span class="ai-msg">AI:</span> ${data.response}</div>`;
+                display.innerHTML += `<div><span style="color:var(--secondary); font-weight:bold;">AI:</span> ${data.response}</div>`;
                 display.scrollTop = display.scrollHeight;
             } catch (error) {
                 display.innerHTML += `<div style="color:red; font-size:11px;">Network error.</div>`;
