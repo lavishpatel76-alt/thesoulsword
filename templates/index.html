@@ -3,216 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Soul Sword | Dashboard</title>
+    <title>The Soul Sword | AI Portfolio</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        /* Base Dark Theme */
+        /* 🌌 Advanced Animated Background */
+        :root {
+            --primary: #a855f7;
+            --secondary: #ec4899;
+            --bg-dark: #0f172a;
+        }
+
         body { 
             font-family: 'Inter', sans-serif; 
             margin: 0; 
-            background: linear-gradient(135deg, #0f172a, #1e1b4b); 
+            background: var(--bg-dark);
             color: #f8fafc;
             display: flex; 
             height: 100vh; 
             overflow: hidden; 
+            position: relative;
+        }
+
+        /* 🖱️ Mouse-Follower Glow Effect */
+        #cursor-glow {
+            position: fixed;
+            top: 0; left: 0;
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, rgba(15, 23, 42, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            transition: transform 0.1s ease-out;
         }
 
         /* Glassmorphism Sidebar */
         .left-panel { 
             width: 380px; 
-            background: rgba(255, 255, 255, 0.03); 
-            backdrop-filter: blur(15px); 
-            -webkit-backdrop-filter: blur(15px);
-            border-right: 1px solid rgba(255, 255, 255, 0.05); 
+            background: rgba(15, 23, 42, 0.7); 
+            backdrop-filter: blur(25px); 
+            border-right: 1px solid rgba(255, 255, 255, 0.1); 
             padding: 30px; 
             display: flex; 
             flex-direction: column; 
-            box-shadow: 5px 0 25px rgba(0,0,0,0.5);
+            box-shadow: 10px 0 30px rgba(0,0,0,0.5);
             z-index: 10;
         }
 
-        /* Feed Area */
-        .right-panel { 
-            flex: 1; 
-            padding: 40px; 
-            overflow-y: auto; 
-            background: transparent;
-        }
+        .right-panel { flex: 1; padding: 40px; overflow-y: auto; position: relative; z-index: 1; }
 
-        /* Gradient Text for Brand */
+        /* ✨ Gradient Shine Animation for Title */
         h1 { 
-            font-size: 32px; 
-            font-weight: 800;
-            background: -webkit-linear-gradient(#a855f7, #ec4899);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-top: 0;
-            margin-bottom: 30px; 
+            font-size: 32px; font-weight: 800;
+            background: linear-gradient(90deg, #fff, var(--primary), var(--secondary), #fff);
+            background-size: 200% auto;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: shine 4s linear infinite;
         }
 
-        h2 { color: #f8fafc; font-weight: 600; letter-spacing: 1px; }
+        @keyframes shine { to { background-position: 200% center; } }
 
-        /* Modern Inputs */
+        /* Modern Forms */
         input, textarea { 
-            width: 100%; 
-            padding: 14px; 
-            margin-bottom: 15px; 
-            background: rgba(0, 0, 0, 0.2); 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-            border-radius: 10px; 
-            color: white;
-            font-size: 14px;
-            font-family: 'Inter', sans-serif;
-            outline: none;
-            transition: all 0.3s ease;
-            box-sizing: border-box; 
+            width: 100%; padding: 12px; margin-bottom: 12px;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); 
+            border-radius: 12px; color: white; outline: none; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
-        input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.4); }
-        
-        input:focus, textarea:focus { 
-            border-color: #a855f7; 
-            box-shadow: 0 0 10px rgba(168, 85, 247, 0.2); 
-        }
+        input:focus { border-color: var(--primary); background: rgba(255, 255, 255, 0.08); box-shadow: 0 0 20px rgba(168, 85, 247, 0.2); }
 
-        textarea { resize: vertical; min-height: 100px; }
-
-        /* Glowing Button */
         #post-btn { 
-            background: linear-gradient(135deg, #8b5cf6, #d946ef); 
-            color: white; 
-            border: none; 
-            padding: 15px; 
-            border-radius: 10px; 
-            font-weight: bold; 
-            font-size: 16px;
-            cursor: pointer; 
-            transition: transform 0.2s, box-shadow 0.2s; 
-            width: 100%; 
+            background: linear-gradient(135deg, var(--primary), var(--secondary)); 
+            color: white; border: none; padding: 14px; border-radius: 12px;
+            font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s;
+            position: relative; overflow: hidden;
         }
-        #post-btn:hover { 
-            transform: translateY(-2px); 
-            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4); 
+        #post-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(168, 85, 247, 0.4); }
+
+        /* 📩 Enhanced Contact Section */
+        .contact-section { margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .contact-link { 
+            display: flex; align-items: center; gap: 10px; color: #94a3b8; text-decoration: none; 
+            font-size: 13px; margin-bottom: 12px; transition: 0.3s;
         }
+        .contact-link:hover { color: var(--primary); transform: translateX(5px); }
 
         /* AI Chat Box */
         .chat-container { 
-            margin-top: auto; 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-            border-radius: 12px; 
-            padding: 20px; 
-            background: rgba(0, 0, 0, 0.3); 
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.4);
+            margin-top: auto; background: rgba(0,0,0,0.3); border-radius: 16px; 
+            padding: 20px; border: 1px solid rgba(255,255,255,0.05);
         }
-        
-        .chat-container h3 { margin-top: 0; font-size: 16px; color: #cbd5e1; }
-        
-        #chat-display { 
-            height: 200px; 
-            overflow-y: auto; 
-            font-size: 14px; 
-            margin-bottom: 15px; 
-            padding-right: 5px; 
-        }
-        
-        #chat-display div { margin-bottom: 12px; line-height: 1.5; color: #cbd5e1; }
-        
-        /* Custom Scrollbar for Chat */
-        #chat-display::-webkit-scrollbar { width: 4px; }
-        #chat-display::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+        #chat-display { height: 150px; overflow-y: auto; font-size: 13px; margin-bottom: 10px; scroll-behavior: smooth; }
 
-        .user-msg { color: #a855f7; font-weight: 600; }
-        .ai-msg { color: #d946ef; font-weight: 600; }
-
-        .chat-input-row { display: flex; gap: 10px; }
-        .chat-input-row input { margin-bottom: 0; flex: 1; }
-        .chat-input-row button { 
-            background: rgba(255, 255, 255, 0.1); 
-            color: white; 
-            border: 1px solid rgba(255, 255, 255, 0.2); 
-            padding: 0 20px; 
-            border-radius: 10px; 
-            font-weight: bold; 
-            cursor: pointer; 
-            transition: all 0.3s; 
-        }
-        .chat-input-row button:hover { 
-            background: #a855f7; 
-            border-color: #a855f7; 
-        }
-
-        /* Story Feed Cards */
+        /* 🃏 Advanced Story Cards */
         .story-card { 
-            background: rgba(255, 255, 255, 0.03); 
-            backdrop-filter: blur(10px); 
-            border: 1px solid rgba(255, 255, 255, 0.05); 
-            padding: 25px; 
-            border-radius: 16px; 
-            margin-bottom: 25px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
-            transition: transform 0.3s, border-color 0.3s; 
+            background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(10px); 
+            border: 1px solid rgba(255, 255, 255, 0.05); padding: 30px; 
+            border-radius: 24px; margin-bottom: 30px; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .story-card:hover { 
-            transform: translateY(-4px); 
-            border-color: rgba(168, 85, 247, 0.4); 
+            transform: scale(1.02) translateY(-10px); 
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
         }
-        .story-card h3 { margin-top: 0; color: #f8fafc; font-size: 24px; }
-        .story-card p { color: #94a3b8; line-height: 1.7; font-size: 15px; }
-        .story-card img { width: 100%; border-radius: 10px; margin-top: 15px; border: 1px solid rgba(255,255,255,0.1); }
+
+        /* Smooth Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
     </style>
 </head>
 <body>
 
+    <div id="cursor-glow"></div>
+
     <div class="left-panel">
         <h1>The Soul Sword</h1>
+        
         <form action="/post" method="POST">
-            <input type="text" name="story_title" placeholder="Story Title" required>
-            <textarea name="story_content" placeholder="Write your content here..." required></textarea>
+            <input type="text" name="story_title" placeholder="Project Name" required>
+            <textarea name="story_content" placeholder="Technical details..." required></textarea>
             <input type="text" name="story_image" placeholder="Image URL (Optional)">
             <input type="password" name="admin_pass" placeholder="Admin Key" required>
-            <button id="post-btn" type="submit">Post to Feed</button>
+            <button id="post-btn" type="submit">Deploy to Feed</button>
         </form>
 
+        <div class="contact-section">
+            <a href="mailto:b25bs2136@gmail.com" class="contact-link">📧 b25bs2136@gmail.com</a>
+            <a href="https://www.linkedin.com/in/lavish2007" target="_blank" class="contact-link">🔗 LinkedIn Profile</a>
+        </div>
+
         <div class="chat-container">
-            <h3>💬 Ask Lavish AI</h3>
+            <h3 style="font-size:14px; color:var(--primary);">💬 Best Friend AI</h3>
             <div id="chat-display"></div>
-            <div class="chat-input-row">
-                <input type="text" id="chat-input" placeholder="Type a message..." onkeypress="handleEnter(event)">
-                <button onclick="sendMessage()">Send</button>
+            <div style="display:flex; gap:8px;">
+                <input type="text" id="chat-input" placeholder="Message..." onkeypress="handleEnter(event)" style="margin-bottom:0; font-size:12px;">
+                <button onclick="sendMessage()" style="background:var(--primary); border:none; color:white; border-radius:10px; padding:0 15px; cursor:pointer;">Send</button>
             </div>
         </div>
     </div>
 
     <div class="right-panel">
-        <h2>Live Feed</h2>
+        <h2 style="font-size:24px; margin-bottom:30px;">Architecture Feed</h2>
         {% for story in stories %}
         <div class="story-card">
-            <h3>{{ story.title }}</h3>
-            <p>{{ story.content }}</p>
-            {% if story.image %}<img src="{{ story.image }}" alt="Story Image">{% endif %}
+            <h3 style="margin-bottom:15px; font-size:22px;">{{ story.title }}</h3>
+            <p style="font-size:15px;">{{ story.content }}</p>
+            {% if story.image %}<img src="{{ story.image }}" alt="Project Preview">{% endif %}
         </div>
         {% endfor %}
     </div>
 
     <script>
-        // Added a feature so you can press "Enter" to send a message
-        function handleEnter(e) {
-            if(e.key === 'Enter'){
-                sendMessage();
-            }
-        }
+        // 🖱️ Mouse Follower Logic
+        const glow = document.getElementById('cursor-glow');
+        document.addEventListener('mousemove', (e) => {
+            glow.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
+        });
+
+        function handleEnter(e) { if(e.key === 'Enter') sendMessage(); }
 
         async function sendMessage() {
             const input = document.getElementById('chat-input');
             const display = document.getElementById('chat-display');
             if(!input.value) return;
 
-            // Display your message
-            display.innerHTML += `<div><span class="user-msg">You:</span> ${input.value}</div>`;
+            display.innerHTML += `<div><span style="color:var(--primary); font-weight:bold;">Me:</span> ${input.value}</div>`;
             const msg = input.value;
             input.value = '';
-
-            // Auto-scroll to bottom
             display.scrollTop = display.scrollHeight;
 
             try {
@@ -222,12 +179,10 @@
                     body: JSON.stringify({message: msg})
                 });
                 const data = await response.json();
-                
-                // Display AI response
-                display.innerHTML += `<div><span class="ai-msg">AI:</span> ${data.response}</div>`;
+                display.innerHTML += `<div><span style="color:var(--secondary); font-weight:bold;">AI:</span> ${data.response}</div>`;
                 display.scrollTop = display.scrollHeight;
             } catch (error) {
-                display.innerHTML += `<div><span class="ai-msg">System:</span> Network Error. Check connection.</div>`;
+                display.innerHTML += `<div style="color:red;">Error connecting to server.</div>`;
             }
         }
     </script>
