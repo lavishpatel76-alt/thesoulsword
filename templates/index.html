@@ -5,43 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Soul Sword | AI Portfolio</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.72/build/spline-viewer.js"></script>
+
     <style>
-        /* 🌌 Advanced Animated Background */
         :root {
             --primary: #a855f7;
             --secondary: #ec4899;
-            --bg-dark: #0f172a;
+            --glass: rgba(15, 23, 42, 0.7);
         }
 
         body { 
             font-family: 'Inter', sans-serif; 
             margin: 0; 
-            background: var(--bg-dark);
+            background: #0f172a;
             color: #f8fafc;
             display: flex; 
             height: 100vh; 
             overflow: hidden; 
-            position: relative;
         }
 
-        /* 🖱️ Mouse-Follower Glow Effect */
-        #cursor-glow {
+        /* 🌌 Spline 3D Background Positioning */
+        #canvas3d {
             position: fixed;
-            top: 0; left: 0;
-            width: 600px; height: 600px;
-            background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, rgba(15, 23, 42, 0) 70%);
-            border-radius: 50%;
-            pointer-events: none;
-            transform: translate(-50%, -50%);
-            z-index: 0;
-            transition: transform 0.1s ease-out;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1; /* Behind all content */
         }
 
         /* Glassmorphism Sidebar */
         .left-panel { 
             width: 380px; 
-            background: rgba(15, 23, 42, 0.7); 
-            backdrop-filter: blur(25px); 
+            background: var(--glass); 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px);
             border-right: 1px solid rgba(255, 255, 255, 0.1); 
             padding: 30px; 
             display: flex; 
@@ -50,116 +49,104 @@
             z-index: 10;
         }
 
-        .right-panel { flex: 1; padding: 40px; overflow-y: auto; position: relative; z-index: 1; }
+        .right-panel { flex: 1; padding: 40px; overflow-y: auto; z-index: 1; }
 
-        /* ✨ Gradient Shine Animation for Title */
         h1 { 
             font-size: 32px; font-weight: 800;
-            background: linear-gradient(90deg, #fff, var(--primary), var(--secondary), #fff);
-            background-size: 200% auto;
+            background: linear-gradient(to right, #fff, var(--primary));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            animation: shine 4s linear infinite;
+            margin-bottom: 25px; 
         }
 
-        @keyframes shine { to { background-position: 200% center; } }
-
-        /* Modern Forms */
+        /* Forms & Inputs */
         input, textarea { 
             width: 100%; padding: 12px; margin-bottom: 12px;
             background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); 
-            border-radius: 12px; color: white; outline: none; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 10px; color: white; outline: none; transition: 0.3s;
+            box-sizing: border-box;
         }
-        input:focus { border-color: var(--primary); background: rgba(255, 255, 255, 0.08); box-shadow: 0 0 20px rgba(168, 85, 247, 0.2); }
+        input:focus { border-color: var(--primary); background: rgba(255, 255, 255, 0.1); }
 
         #post-btn { 
             background: linear-gradient(135deg, var(--primary), var(--secondary)); 
-            color: white; border: none; padding: 14px; border-radius: 12px;
+            color: white; border: none; padding: 14px; border-radius: 10px;
             font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s;
-            position: relative; overflow: hidden;
         }
-        #post-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(168, 85, 247, 0.4); }
+        #post-btn:hover { transform: scale(1.02); box-shadow: 0 0 20px rgba(168, 85, 247, 0.4); }
 
-        /* 📩 Enhanced Contact Section */
+        /* Contact Section */
         .contact-section { margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
         .contact-link { 
-            display: flex; align-items: center; gap: 10px; color: #94a3b8; text-decoration: none; 
-            font-size: 13px; margin-bottom: 12px; transition: 0.3s;
+            display: block; color: #94a3b8; text-decoration: none; 
+            font-size: 13px; margin-bottom: 10px; transition: 0.3s;
         }
-        .contact-link:hover { color: var(--primary); transform: translateX(5px); }
+        .contact-link:hover { color: #f8fafc; transform: translateX(5px); }
 
         /* AI Chat Box */
         .chat-container { 
-            margin-top: auto; background: rgba(0,0,0,0.3); border-radius: 16px; 
+            margin-top: auto; background: rgba(0,0,0,0.4); border-radius: 16px; 
             padding: 20px; border: 1px solid rgba(255,255,255,0.05);
         }
-        #chat-display { height: 150px; overflow-y: auto; font-size: 13px; margin-bottom: 10px; scroll-behavior: smooth; }
+        #chat-display { height: 150px; overflow-y: auto; font-size: 13px; margin-bottom: 10px; }
+        .user-msg { color: var(--primary); font-weight: 600; }
+        .ai-msg { color: var(--secondary); font-weight: 600; }
 
-        /* 🃏 Advanced Story Cards */
+        /* Project Cards */
         .story-card { 
-            background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(10px); 
-            border: 1px solid rgba(255, 255, 255, 0.05); padding: 30px; 
-            border-radius: 24px; margin-bottom: 30px; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); 
+            border: 1px solid rgba(255, 255, 255, 0.1); padding: 25px; 
+            border-radius: 20px; margin-bottom: 25px; transition: 0.4s;
         }
-        .story-card:hover { 
-            transform: scale(1.02) translateY(-10px); 
-            background: rgba(255, 255, 255, 0.05);
-            border-color: var(--primary);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-        }
+        .story-card:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .story-card img { width: 100%; border-radius: 12px; margin-top: 15px; }
 
-        /* Smooth Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
     </style>
 </head>
 <body>
 
-    <div id="cursor-glow"></div>
+    <spline-viewer id="canvas3d" url="https://prod.spline.design/p8duaVnF9cKKJT3l/scene.splinecode"></spline-viewer>
 
     <div class="left-panel">
         <h1>The Soul Sword</h1>
         
         <form action="/post" method="POST">
-            <input type="text" name="story_title" placeholder="Project Name" required>
+            <input type="text" name="story_title" placeholder="Project Title" required>
             <textarea name="story_content" placeholder="Technical details..." required></textarea>
             <input type="text" name="story_image" placeholder="Image URL (Optional)">
             <input type="password" name="admin_pass" placeholder="Admin Key" required>
-            <button id="post-btn" type="submit">Deploy to Feed</button>
+            <button id="post-btn" type="submit">Publish to Feed</button>
         </form>
 
         <div class="contact-section">
-            <a href="mailto:b25bs2136@iitj.ac.in" class="contact-link">📧 b25bs2136@iitj.ac.in</a>
+            <a href="mailto:b25bs2136@gmail.com" class="contact-link">📧 b25bs2136@gmail.com</a>
             <a href="https://www.linkedin.com/in/lavish2007" target="_blank" class="contact-link">🔗 LinkedIn Profile</a>
         </div>
 
         <div class="chat-container">
-            <h3 style="font-size:14px; color:var(--primary);">💬 Best Friend AI</h3>
+            <h3 style="font-size:14px; color:var(--primary); margin-top:0;">💬 Best Friend AI</h3>
             <div id="chat-display"></div>
             <div style="display:flex; gap:8px;">
-                <input type="text" id="chat-input" placeholder="Message..." onkeypress="handleEnter(event)" style="margin-bottom:0; font-size:12px;">
-                <button onclick="sendMessage()" style="background:var(--primary); border:none; color:white; border-radius:10px; padding:0 15px; cursor:pointer;">Send</button>
+                <input type="text" id="chat-input" placeholder="Say hi..." onkeypress="handleEnter(event)" style="margin-bottom:0;">
+                <button onclick="sendMessage()" style="background:var(--primary); border:none; color:white; border-radius:8px; padding:0 15px; cursor:pointer;">Send</button>
             </div>
         </div>
     </div>
 
     <div class="right-panel">
-        <h2 style="font-size:24px; margin-bottom:30px;">Architecture Feed</h2>
+        <h2 style="margin-bottom:30px;">Architecture Feed</h2>
         {% for story in stories %}
         <div class="story-card">
-            <h3 style="margin-bottom:15px; font-size:22px;">{{ story.title }}</h3>
-            <p style="font-size:15px;">{{ story.content }}</p>
-            {% if story.image %}<img src="{{ story.image }}" alt="Project Preview">{% endif %}
+            <h3 style="margin-top:0;">{{ story.title }}</h3>
+            <p style="color:#cbd5e1; line-height:1.6;">{{ story.content }}</p>
+            {% if story.image %}<img src="{{ story.image }}" alt="Preview">{% endif %}
         </div>
         {% endfor %}
     </div>
 
     <script>
-        // 🖱️ Mouse Follower Logic
-        const glow = document.getElementById('cursor-glow');
-        document.addEventListener('mousemove', (e) => {
-            glow.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
-        });
-
         function handleEnter(e) { if(e.key === 'Enter') sendMessage(); }
 
         async function sendMessage() {
@@ -167,7 +154,7 @@
             const display = document.getElementById('chat-display');
             if(!input.value) return;
 
-            display.innerHTML += `<div><span style="color:var(--primary); font-weight:bold;">Me:</span> ${input.value}</div>`;
+            display.innerHTML += `<div><span class="user-msg">Me:</span> ${input.value}</div>`;
             const msg = input.value;
             input.value = '';
             display.scrollTop = display.scrollHeight;
@@ -179,10 +166,10 @@
                     body: JSON.stringify({message: msg})
                 });
                 const data = await response.json();
-                display.innerHTML += `<div><span style="color:var(--secondary); font-weight:bold;">AI:</span> ${data.response}</div>`;
+                display.innerHTML += `<div><span class="ai-msg">AI:</span> ${data.response}</div>`;
                 display.scrollTop = display.scrollHeight;
             } catch (error) {
-                display.innerHTML += `<div style="color:red;">Error connecting to server.</div>`;
+                display.innerHTML += `<div style="color:red; font-size:11px;">Network error.</div>`;
             }
         }
     </script>
