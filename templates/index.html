@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Soul Sword | AI Portfolio</title>
+    <title>The Soul Sword | IITJ AI Portfolio</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     
     <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.72/build/spline-viewer.js"></script>
@@ -12,7 +12,7 @@
         :root {
             --primary: #a855f7;
             --secondary: #ec4899;
-            --glass: rgba(15, 23, 42, 0.7);
+            --glass: rgba(15, 23, 42, 0.75);
         }
 
         body { 
@@ -25,17 +25,17 @@
             overflow: hidden; 
         }
 
-        /* 🌌 Spline 3D Background Positioning */
+        /* 🌌 Spline 3D Background Layer */
         #canvas3d {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            z-index: -1; /* Behind all content */
+            z-index: -1; 
         }
 
-        /* Glassmorphism Sidebar */
+        /* ⬅️ LEFT PANEL (AI & Forms) */
         .left-panel { 
             width: 380px; 
             background: var(--glass); 
@@ -47,60 +47,85 @@
             flex-direction: column; 
             box-shadow: 10px 0 30px rgba(0,0,0,0.5);
             z-index: 10;
+            position: relative;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .right-panel { flex: 1; padding: 40px; overflow-y: auto; z-index: 1; }
+        .left-panel.collapsed { transform: translateX(-100%); }
 
-        h1 { 
-            font-size: 32px; font-weight: 800;
-            background: linear-gradient(to right, #fff, var(--primary));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin-bottom: 25px; 
+        /* ➡️ RIGHT PANEL (Architecture Feed) */
+        .right-panel { 
+            flex: 1; 
+            padding: 40px; 
+            overflow-y: auto; 
+            z-index: 10; 
+            position: relative;
+            background: rgba(15, 23, 42, 0.3);
+            backdrop-filter: blur(5px);
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* Forms & Inputs */
-        input, textarea { 
-            width: 100%; padding: 12px; margin-bottom: 12px;
-            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); 
-            border-radius: 10px; color: white; outline: none; transition: 0.3s;
-            box-sizing: border-box;
-        }
-        input:focus { border-color: var(--primary); background: rgba(255, 255, 255, 0.1); }
+        .right-panel.collapsed { transform: translateX(100%); }
 
-        #post-btn { 
-            background: linear-gradient(135deg, var(--primary), var(--secondary)); 
-            color: white; border: none; padding: 14px; border-radius: 10px;
-            font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s;
+        /* 🏹 TOGGLE ARROWS */
+        .toggle-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 25px;
+            height: 60px;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            font-size: 14px;
+            transition: 0.2s;
         }
-        #post-btn:hover { transform: scale(1.02); box-shadow: 0 0 20px rgba(168, 85, 247, 0.4); }
 
-        /* Contact Section */
-        .contact-section { margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
-        .contact-link { 
-            display: block; color: #94a3b8; text-decoration: none; 
-            font-size: 13px; margin-bottom: 10px; transition: 0.3s;
-        }
-        .contact-link:hover { color: #f8fafc; transform: translateX(5px); }
+        .toggle-btn:hover { background: var(--primary); border-color: var(--primary); }
+        .left-toggle { right: -25px; border-radius: 0 8px 8px 0; border-left: none; }
+        .right-toggle { left: -25px; border-radius: 8px 0 0 8px; border-right: none; }
 
-        /* AI Chat Box */
-        .chat-container { 
-            margin-top: auto; background: rgba(0,0,0,0.4); border-radius: 16px; 
-            padding: 20px; border: 1px solid rgba(255,255,255,0.05);
-        }
+        /* UI ELEMENTS */
+        h1 { font-size: 32px; font-weight: 800; margin: 0 0 25px 0; background: linear-gradient(to right, #fff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        input, textarea { width: 100%; padding: 12px; margin-bottom: 12px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; color: white; outline: none; box-sizing: border-box; }
+        #post-btn { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; padding: 14px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; }
+
+        /* AI CHAT */
+        .chat-container { margin-top: auto; background: rgba(0,0,0,0.4); border-radius: 16px; padding: 20px; border: 1px solid rgba(255,255,255,0.05); }
         #chat-display { height: 150px; overflow-y: auto; font-size: 13px; margin-bottom: 10px; }
-        .user-msg { color: var(--primary); font-weight: 600; }
-        .ai-msg { color: var(--secondary); font-weight: 600; }
+        .user-msg { color: var(--primary); font-weight: bold; }
+        .ai-msg { color: var(--secondary); font-weight: bold; }
 
-        /* Project Cards */
-        .story-card { 
-            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); 
-            border: 1px solid rgba(255, 255, 255, 0.1); padding: 25px; 
-            border-radius: 20px; margin-bottom: 25px; transition: 0.4s;
+        /* 📍 CORNER FOOTER */
+        .corner-footer {
+            position: fixed;
+            bottom: 22px;
+            right: 175px; 
+            display: flex;
+            gap: 25px;
+            z-index: 5;
+            align-items: center;
         }
-        .story-card:hover { transform: translateY(-5px); border-color: var(--primary); }
-        .story-card img { width: 100%; border-radius: 12px; margin-top: 15px; }
+        .corner-footer a {
+            color: rgba(255, 255, 255, 0.4);
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+        .corner-footer a:hover { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
 
-        /* Scrollbar */
+        /* Story Feed Cards */
+        .story-card { background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); padding: 25px; border-radius: 20px; margin-bottom: 25px; }
+
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
     </style>
@@ -109,44 +134,60 @@
 
     <spline-viewer id="canvas3d" url="https://prod.spline.design/p8duaVnF9cKKJT3l/scene.splinecode"></spline-viewer>
 
-    <div class="left-panel">
+    <div class="corner-footer">
+        <a href="mailto:b25bs2136@iitj.ac.in">📧 b25bs2136@iitj.ac.in</a>
+        <a href="https://www.linkedin.com/in/lavish2007" target="_blank">🔗 LINKEDIN</a>
+    </div>
+
+    <div class="left-panel" id="left-panel">
+        <div class="toggle-btn left-toggle" id="left-btn" onclick="toggleLeft()">◀</div>
         <h1>The Soul Sword</h1>
-        
         <form action="/post" method="POST">
             <input type="text" name="story_title" placeholder="Project Title" required>
-            <textarea name="story_content" placeholder="Technical details..." required></textarea>
+            <textarea name="story_content" placeholder="Details..." required></textarea>
             <input type="text" name="story_image" placeholder="Image URL (Optional)">
             <input type="password" name="admin_pass" placeholder="Admin Key" required>
-            <button id="post-btn" type="submit">Publish to Feed</button>
+            <button id="post-btn" type="submit">Post Project</button>
         </form>
-
-        <div class="contact-section">
-            <a href="mailto:b25bs2136@gmail.com" class="contact-link">📧 b25bs2136@gmail.com</a>
-            <a href="https://www.linkedin.com/in/lavish2007" target="_blank" class="contact-link">🔗 LinkedIn Profile</a>
-        </div>
-
         <div class="chat-container">
             <h3 style="font-size:14px; color:var(--primary); margin-top:0;">💬 Best Friend AI</h3>
             <div id="chat-display"></div>
             <div style="display:flex; gap:8px;">
-                <input type="text" id="chat-input" placeholder="Say hi..." onkeypress="handleEnter(event)" style="margin-bottom:0;">
+                <input type="text" id="chat-input" placeholder="Message..." onkeypress="handleEnter(event)" style="margin-bottom:0;">
                 <button onclick="sendMessage()" style="background:var(--primary); border:none; color:white; border-radius:8px; padding:0 15px; cursor:pointer;">Send</button>
             </div>
         </div>
     </div>
 
-    <div class="right-panel">
-        <h2 style="margin-bottom:30px;">Architecture Feed</h2>
+    <div class="right-panel" id="right-panel">
+        <div class="toggle-btn right-toggle" id="right-btn" onclick="toggleRight()">▶</div>
+        <h2 style="margin-top:0; margin-bottom:30px;">Architecture Feed</h2>
         {% for story in stories %}
         <div class="story-card">
             <h3 style="margin-top:0;">{{ story.title }}</h3>
-            <p style="color:#cbd5e1; line-height:1.6;">{{ story.content }}</p>
-            {% if story.image %}<img src="{{ story.image }}" alt="Preview">{% endif %}
+            <p style="color:#cbd5e1; line-height:1.6; font-size:14px;">{{ story.content }}</p>
+            {% if story.image %}<img src="{{ story.image }}" style="width:100%; border-radius:12px; margin-top:15px;" alt="Preview">{% endif %}
         </div>
         {% endfor %}
     </div>
 
     <script>
+        // --- 🚪 Sliding Door Logic ---
+        function toggleLeft() {
+            const panel = document.getElementById('left-panel');
+            const btn = document.getElementById('left-btn');
+            panel.classList.toggle('collapsed');
+            btn.innerHTML = panel.classList.contains('collapsed') ? '▶' : '◀';
+        }
+
+        function toggleRight() {
+            const panel = document.getElementById('right-panel');
+            const btn = document.getElementById('right-btn');
+            panel.classList.toggle('collapsed');
+            btn.innerHTML = panel.classList.contains('collapsed') ? '◀' : '▶';
+        }
+
+        // --- 💬 AI Chat Logic ---
         function handleEnter(e) { if(e.key === 'Enter') sendMessage(); }
 
         async function sendMessage() {
