@@ -73,6 +73,34 @@ def chat():
     except Exception as e:
         return jsonify({"response": f"AI Error: {str(e)}"}), 500
     
+@app.route('/delete/<int:index>', methods=['POST'])
+def delete_story(index):
+    user_pass = request.form.get('admin_pass')
+    if user_pass != ADMIN_PASSWORD:
+        return "Unauthorized!", 403
+
+    stories = []
+    if os.path.exists(DATA_FILE):
+        with open(DATA_FILE, mode='r', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            stories = list(reader)
+
+    # We use -1 because the feed is displayed in reverse order [::-1]
+    # This logic helps find the correct story to delete
+    actual_index = len(stories) - 1 - index
+    
+    if 0 <= actual_index < len(stories):
+        del stories[actual_index]
+        
+        # Rewrite the file without the deleted story
+        with open(DATA_FILE, mode='w', newline='', encoding='utf-8') as f:
+            fieldnames = ['title', 'content', 'image']
+            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(stories)
+            
+    return redirect('/')
+
 if __name__ == '__main__':
     # Use the port Render provides, or default to 10000
     port = int(os.environ.get("PORT", 10000))
